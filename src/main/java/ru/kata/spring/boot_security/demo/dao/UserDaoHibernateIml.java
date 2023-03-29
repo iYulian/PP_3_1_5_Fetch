@@ -53,7 +53,11 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
 
     @Override
     public User getFirstUserByName(String name) {
-        List<User> userList = entityManager.createQuery("from User where name = '" + name + "'", User.class).getResultList();
+        List<User> userList = entityManager.
+                createQuery("from User where name = '" + name + "'", User.class).getResultList();
+        if (userList.isEmpty()){
+            return null;
+        }
         return  userList.get(0);
     }
 }
