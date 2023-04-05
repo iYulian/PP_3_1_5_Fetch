@@ -1,12 +1,13 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Repository
@@ -15,20 +16,40 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
 
     @Override
     public void saveUser(User user, String authority1, String authority2) {
-        if (!authority1.isEmpty()) {
-            user.userAddAuthority(Role.valueOf(authority1));
+
+        AtomicBoolean a = new AtomicBoolean(true);
+        AtomicBoolean b = new AtomicBoolean(true);
+
+        if (user.getId() != 0) {
+            getUserById(user.getId()).getAuthorities().forEach(x -> {
+
+                if (x.getAuthority().equals(authority1)) {
+                    a.set(false);
+                }
+                if (x.getAuthority().equals(authority2)) {
+                    b.set(false);
+                }
+            });
         }
-        if (!authority2.isEmpty()) {
-            user.userAddAuthority(Role.valueOf(authority2));
+
+        if (a.get() & !authority1.isEmpty()) {
+            user.userAddAuthority(authority1);
+        }
+
+        if (b.get() & !authority2.isEmpty()) {
+            user.userAddAuthority(authority2);
         }
         if (user.getId() == 0) {
             entityManager.persist(user);
         } else {
             entityManager.merge(user);
         }
+        user.setLastname(bCryptPasswordEncoder.encode(user.getLastname()));
     }
 
     @Override

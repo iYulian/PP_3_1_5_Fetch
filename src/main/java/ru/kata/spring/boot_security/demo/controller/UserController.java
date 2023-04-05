@@ -17,13 +17,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Можно было бы так, но primary key это id, а не name. Тк по заданию нужно перенести все классы ничего не поделаешь)
-//    @RequestMapping(value = "/user")
-//    public String addUser(ModelMap model, @AuthenticationPrincipal User user) {
-//        model.addAttribute("user", user);
-//        return "user";
-//    }
-    //Пришлось добваить метод который ищет по имени  первое совпадение в бд и показывает его на страничке user'а
     @RequestMapping(value = "/user")
     public String addUser(ModelMap model, Principal principal) {
         User user = userService.getFirstUserByName(principal.getName());
