@@ -1,7 +1,10 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,11 +27,9 @@ public class User implements UserDetails, Serializable {
 
     @Column
     private byte age;
-
-    // Если ставлю ленивую инициализацию, то получаю исключение
-    // org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role:
-    // ru.kata.spring.boot_security.demo.model.User.authority, could not initialize proxy - no Session
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     private Set<Role> authority;
 
     public User() {
@@ -102,6 +103,7 @@ public class User implements UserDetails, Serializable {
     }
 
     @Override
+    @Transactional
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authority;
     }

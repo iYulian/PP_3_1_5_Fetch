@@ -37,11 +37,13 @@ public class UserServiceIml implements UserService{
     }
 
     @Override
+    @Transactional
     public User getUserById(long id) {
         return userDao.getUserById(id);
     }
 
     @Override
+    @Transactional
     public User getFirstUserByName(String name) {
         return userDao.getFirstUserByName(name);
     }
