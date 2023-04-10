@@ -19,7 +19,7 @@
         <tr th:each="msg : ${users}">
 
             <td th:utext="${msg.getName()}"></td>
-            <td th:utext="${msg.getLastname()}"></td>
+            <td th:utext="${msg.getUserPassword()}"></td>
             <td th:utext="${msg.getAge()}"></td>
 
             <td><form action="updateUser" method="get">

@@ -10,7 +10,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Entity
 @Table(name = "users")
@@ -23,35 +25,37 @@ public class User implements UserDetails, Serializable {
     private String name;
 
     @Column
-    private String lastname;
+    private String password;
 
     @Column
     private byte age;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> authority;
+
 
     public User() {
         authority = new HashSet<>();
     }
 
-    public User(String name, String lastname, byte age) {
+    public User(String name, String password, byte age) {
         authority = new HashSet<>();
         this.name = name;
-        this.lastname = lastname;
+        this.password = password;
         this.age = age;
     }
 
     public void userAddAuthority(String stringRole) {
         Role role = new Role(stringRole);
         authority.add(role);
-        role.setUser(this);
+    }
+    public void userAddAuthority(Role role) {
+        authority.add(role);
     }
 
-    public void userClearAuthority() {
-        authority = new HashSet<>();
-    }
     public Set<Role> getRoles() {
         return authority;
     }
@@ -76,12 +80,12 @@ public class User implements UserDetails, Serializable {
         this.name = name;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getUserPassword() {
+        return password;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public byte getAge() {
@@ -97,7 +101,7 @@ public class User implements UserDetails, Serializable {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
+                ", password='" + password + '\'' +
                 ", age=" + age +
                 '}';
     }
@@ -110,7 +114,7 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public String getPassword() {
-        return lastname;
+        return password;
     }
 
     @Override

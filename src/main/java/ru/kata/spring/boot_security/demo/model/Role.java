@@ -1,8 +1,12 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "authority")
@@ -11,27 +15,34 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
 
     @Column
-
     private String role;
 
+
+
     public Role() {
+        users = new HashSet<>();
+    }
+
+    public void addUser (User user) {
+        users.add(user);
     }
 
     public Role(String role) {
         this.role = role;
     }
 
-    public User getUser() {
-        return user;
+    public Set<User> getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Set<User> users) {
+        this.users = users;
     }
 
     public String getRole() {
@@ -51,7 +62,7 @@ public class Role implements GrantedAuthority {
     @Override
     public String toString() {
         return "Role{" +
-                "user=" + user +
+                "user=" + users +
                 ", role='" + role + '\'' +
                 '}';
     }

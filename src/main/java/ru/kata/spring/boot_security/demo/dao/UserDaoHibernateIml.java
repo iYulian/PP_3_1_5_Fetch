@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,8 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
+    private final String userRole = "ROLE_USER";
+    private final String adminRole = "ROLE_ADMIN";
 
     @Override
     public void saveUser(User user, String authority1, String authority2) {
@@ -28,28 +31,32 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
         if (user.getId() != 0) {
             getUserById(user.getId()).getAuthorities().forEach(x -> {
 
-                if (x.getAuthority().equals(authority1)) {
+                if (x.getAuthority().equals(userRole)) {
                     a.set(false);
                 }
-                if (x.getAuthority().equals(authority2)) {
+                if (x.getAuthority().equals(adminRole)) {
                     b.set(false);
                 }
             });
         }
 
-        if (a.get() & !authority1.isEmpty()) {
-            user.userAddAuthority(authority1);
+        if (!a.get() || !authority1.isEmpty()) {
+            user.userAddAuthority(userRole);
         }
 
-        if (b.get() & !authority2.isEmpty()) {
-            user.userAddAuthority(authority2);
+        if (!b.get() || !authority2.isEmpty()) {
+            user.userAddAuthority(adminRole);
         }
+
+        user.setPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
+
         if (user.getId() == 0) {
             entityManager.persist(user);
         } else {
             entityManager.merge(user);
         }
-        user.setLastname(bCryptPasswordEncoder.encode(user.getLastname()));
+        System.out.println(user.getRoles());
+
     }
 
     @Override
