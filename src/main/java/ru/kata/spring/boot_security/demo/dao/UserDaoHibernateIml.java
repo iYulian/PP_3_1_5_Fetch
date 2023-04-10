@@ -55,7 +55,6 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
         } else {
             entityManager.merge(user);
         }
-        System.out.println(user.getRoles());
 
     }
 
