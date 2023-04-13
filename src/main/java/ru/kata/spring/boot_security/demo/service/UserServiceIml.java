@@ -20,8 +20,8 @@ public class UserServiceIml implements UserService{
 
     @Override
     @Transactional
-    public void saveUser(User user, String authority1, String authority2) {
-        userDao.saveUser(user, authority1, authority2);
+    public void saveUser(User user) {
+        userDao.saveUser(user);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class UserServiceIml implements UserService{
 
     @Override
     @Transactional
-    public User getFirstUserByName(String name) {
-        return userDao.getFirstUserByName(name);
+    public User getFirstUserByEmail(String name) {
+        return userDao.getFirstUserByEmail(name);
     }
 }

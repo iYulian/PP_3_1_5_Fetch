@@ -2,13 +2,11 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Repository
@@ -19,33 +17,16 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    private final String userRole = "ROLE_USER";
-    private final String adminRole = "ROLE_ADMIN";
-
     @Override
-    public void saveUser(User user, String authority1, String authority2) {
+    public void saveUser(User user) {
 
-        AtomicBoolean a = new AtomicBoolean(true);
-        AtomicBoolean b = new AtomicBoolean(true);
 
         if (user.getId() != 0) {
-            getUserById(user.getId()).getAuthorities().forEach(x -> {
-
-                if (x.getAuthority().equals(userRole)) {
-                    a.set(false);
-                }
-                if (x.getAuthority().equals(adminRole)) {
-                    b.set(false);
-                }
-            });
-        }
-
-        if (!a.get() || !authority1.isEmpty()) {
-            user.userAddAuthority(userRole);
-        }
-
-        if (!b.get() || !authority2.isEmpty()) {
-            user.userAddAuthority(adminRole);
+            if (user.getRoles().equals(getUserById(user.getId()).getRoles()) ||
+                    user.getRoles().size() < getUserById(user.getId()).getRoles().size()) {
+                user.setRoles(getUserById(user.getId()).getRoles());
+            }
+            user.userAddAuthority(getUserById(user.getId()).getRoles());
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
@@ -79,9 +60,9 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
     }
 
     @Override
-    public User getFirstUserByName(String name) {
+    public User getFirstUserByEmail(String userEmail) {
         List<User> userList = entityManager.
-                createQuery("from User where name = '" + name + "'", User.class).getResultList();
+                createQuery("from User where email = '" + userEmail + "'", User.class).getResultList();
         if (userList.isEmpty()){
             return null;
         }

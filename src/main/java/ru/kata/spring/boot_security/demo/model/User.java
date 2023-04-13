@@ -8,11 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -25,10 +21,16 @@ public class User implements UserDetails, Serializable {
     private String name;
 
     @Column
-    private String password;
+    private String lastname;
 
     @Column
     private byte age;
+
+    @Column
+    private String email;
+
+    @Column
+    private String password;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
@@ -41,19 +43,27 @@ public class User implements UserDetails, Serializable {
         authority = new HashSet<>();
     }
 
-    public User(String name, String password, byte age) {
+    public User(String name, String lastname, byte age, String email, String password) {
         authority = new HashSet<>();
         this.name = name;
-        this.password = password;
+        this.lastname = lastname;
         this.age = age;
+        this.email = email;
+        this.password = password;
     }
 
     public void userAddAuthority(String stringRole) {
         Role role = new Role(stringRole);
         authority.add(role);
     }
-    public void userAddAuthority(Role role) {
-        authority.add(role);
+    public void userAddAuthority(Set<Role> roleList) {
+        authority.addAll(roleList);
+    }
+
+    public String getRolesToString() {
+        StringBuffer stringBuffer = new StringBuffer();
+        authority.forEach(stringBuffer::append);
+        return stringBuffer.toString();
     }
 
     public Set<Role> getRoles() {
@@ -68,7 +78,7 @@ public class User implements UserDetails, Serializable {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -96,13 +106,32 @@ public class User implements UserDetails, Serializable {
         this.age = age;
     }
 
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
+                ", lastname='" + lastname + '\'' +
                 ", age=" + age +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", authority=" + authority +
                 '}';
     }
 
@@ -119,7 +148,7 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public String getUsername() {
-        return name;
+        return email;
     }
 
     @Override

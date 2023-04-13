@@ -33,9 +33,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().successHandler(successUserHandler)
+                .formLogin().loginPage("/login").successHandler(successUserHandler)
                 .permitAll()
                 .and()
+                .csrf().disable()
                 .logout()
                 .logoutUrl("/logout")
                 .permitAll();
@@ -51,8 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
             @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                ru.kata.spring.boot_security.demo.model.User user = userService.getFirstUserByName(username);
+            public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException {
+                ru.kata.spring.boot_security.demo.model.User user = userService.getFirstUserByEmail(userMail);
                 return user;
             }
         };

@@ -1,11 +1,10 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -23,18 +22,17 @@ public class Role implements GrantedAuthority {
     @Column
     private String role;
 
-
-
     public Role() {
         users = new HashSet<>();
     }
 
-    public void addUser (User user) {
-        users.add(user);
+    public Role(String role) {
+        users = new HashSet<>();
+        this.role = role;
     }
 
-    public Role(String role) {
-        this.role = role;
+    public void addUser (User user) {
+        users.add(user);
     }
 
     public Set<User> getUser() {
@@ -53,6 +51,21 @@ public class Role implements GrantedAuthority {
         this.role = role;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
     @Override
     public String getAuthority() {
@@ -61,9 +74,19 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return "Role{" +
-                "user=" + users +
-                ", role='" + role + '\'' +
-                '}';
+        return role.substring(5) + ' ';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role1 = (Role) o;
+        return role.equals(role1.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(role);
     }
 }

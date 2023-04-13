@@ -23,13 +23,16 @@ public class SpringBootSecurityDemoApplication {
 	@Bean
 	InitializingBean sendDatabase() {
 		return () -> {
-			if (userService.getFirstUserByName("admin") == null) {
-				userService.saveUser(new User("admin", "admin", (byte) 100),
-						"ROLE_ADMIN", "ROLE_USER");
+			if (userService.getFirstUserByEmail("admin@mail.ru") == null) {
+				User user1 = new User("admin", "admin", (byte) 100, "admin@mail.ru", "admin");
+				user1.userAddAuthority("ROLE_ADMIN");
+				user1.userAddAuthority("ROLE_USER");
+				userService.saveUser(user1);
 			}
-			if (userService.getFirstUserByName("user") == null) {
-				userService.saveUser(new User("user", "user", (byte) 1),
-						"", "ROLE_USER");
+			if (userService.getFirstUserByEmail("user@mail.ru") == null) {
+				User user2 = new User("user", "user", (byte) 1, "user@mail.ru", "user");
+				user2.userAddAuthority("ROLE_USER");
+				userService.saveUser(user2);
 			}
 		};
 	}

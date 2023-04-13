@@ -19,9 +19,8 @@ public class UserController {
 
     @RequestMapping(value = "/user")
     public String addUser(ModelMap model, Principal principal) {
-        User user = userService.getFirstUserByName(principal.getName());
-
+        User user = userService.getFirstUserByEmail(principal.getName());
         model.addAttribute("user", user);
-        return "user";
+        return "userPage";
     }
 }

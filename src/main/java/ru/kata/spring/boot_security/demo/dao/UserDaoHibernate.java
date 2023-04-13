@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserDaoHibernate {
 
-    void saveUser(User user, String authority1, String authority2);
+    void saveUser(User user);
 
     void removeUserById(long id);
 
@@ -14,6 +14,6 @@ public interface UserDaoHibernate {
 
     User getUserById(long id);
 
-    User getFirstUserByName(String name);
+    User getFirstUserByEmail(String name);
 
 }
