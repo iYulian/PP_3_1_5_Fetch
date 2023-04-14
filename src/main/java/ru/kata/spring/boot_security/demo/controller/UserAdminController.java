@@ -34,7 +34,6 @@ public class UserAdminController {
 
 	@RequestMapping(value = "/saveUser")
 	public String saveUser(@ModelAttribute("user") User user) {
-		System.out.println(user);
 		userService.saveUser(user);
 		return "redirect:/admin";
 	}
