@@ -4,6 +4,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -23,6 +24,14 @@ public class SpringBootSecurityDemoApplication {
 	@Bean
 	InitializingBean sendDatabase() {
 		return () -> {
+			if (userService.getRoleByName("ROLE_ADMIN") == null) {
+				Role adminRole = new Role("ROLE_ADMIN");
+				userService.saveRole(adminRole);
+			}
+			if (userService.getRoleByName("ROLE_USER") == null) {
+				Role adminRole = new Role("ROLE_USER");
+				userService.saveRole(adminRole);
+			}
 			if (userService.getFirstUserByEmail("admin@mail.ru") == null) {
 				User user1 = new User("admin", "admin", (byte) 100, "admin@mail.ru", "admin");
 				user1.userAddAuthority("ROLE_ADMIN");

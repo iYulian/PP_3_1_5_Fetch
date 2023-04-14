@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface UserService {
 
-
     void saveUser(User user);
 
     void removeUserById(long id);
@@ -20,5 +19,9 @@ public interface UserService {
     User getUserById(long id);
 
     User getFirstUserByEmail(String name);
+
+    void saveRole(Role role);
+
+    Role getRoleByName(String role);
 
 }

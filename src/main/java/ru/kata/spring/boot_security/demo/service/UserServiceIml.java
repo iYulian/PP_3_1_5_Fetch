@@ -4,6 +4,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDaoHibernate;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
@@ -46,5 +47,17 @@ public class UserServiceIml implements UserService{
     @Transactional
     public User getFirstUserByEmail(String name) {
         return userDao.getFirstUserByEmail(name);
+    }
+
+    @Override
+    @Transactional
+    public void saveRole(Role role) {
+        userDao.saveRole(role);
+    }
+
+    @Override
+    @Transactional
+    public Role getRoleByName(String role) {
+        return userDao.getRoleByName(role);
     }
 }

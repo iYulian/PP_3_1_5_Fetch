@@ -32,7 +32,8 @@ public class User implements UserDetails, Serializable {
     @Column
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -64,6 +65,10 @@ public class User implements UserDetails, Serializable {
         StringBuffer stringBuffer = new StringBuffer();
         authority.forEach(stringBuffer::append);
         return stringBuffer.toString();
+    }
+
+    public void userAddAuthority(Role role) {
+        authority.add(role);
     }
 
     public Set<Role> getRoles() {
