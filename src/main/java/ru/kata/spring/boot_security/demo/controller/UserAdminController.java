@@ -39,12 +39,6 @@ public class UserAdminController {
 		return "redirect:/admin";
 	}
 
-	@RequestMapping(value = "/updateUser", produces = "text/html; charset=utf-8")
-	public String updateUser(@ModelAttribute("id") long id, ModelMap model) {
-		model.addAttribute("user", userService.getUserById(id));
-		return "redirect:saveUser";
-	}
-
 	@RequestMapping(value = "/deleteUser")
 	public String deleteUser(@ModelAttribute("id") long id) {
 		userService.removeUserById(id);

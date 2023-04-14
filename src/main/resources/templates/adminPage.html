@@ -124,6 +124,12 @@
         ul.nav.nav-tabs {
             width: 80%;
         }
+        input#usersesId.form-control {
+            background-color: #e9ecef;
+        }
+        input#userId.form-control {
+            background-color: #e9ecef;
+        }
     </style>
 </head>
 <body>
@@ -188,7 +194,7 @@
                                 <td th:utext="${userses.getRolesToString()}"></td>
                                 <td>
                                     <!-- Button trigger modal -->
-                                    <form  action="#modalForEdit" method="get" onclick="">
+                                    <form  action="#modalForEdit" method="get">
                                         <input hidden="hidden" th:name="id" th:value="${userses.getId()}"/>
                                         <input hidden="hidden" th:name="name" th:value="${userses.getName()}"/>
                                         <input hidden="hidden" th:name="lastname" th:value="${userses.getLastname()}"/>
@@ -211,7 +217,7 @@
 
                                                         <div class="mb-3">
                                                             <label for="usersesId" class="form-label">ID</label>
-                                                            <div class="input-group">
+                                                            <div class="input-group grey">
                                                                 <input readonly type="number" th:name="id" th:value="${user.getId()}"
                                                                        class="form-control" id="usersesId" aria-describedby="basic-addon3">
                                                             </div>
@@ -275,10 +281,96 @@
                                         </div>
                                     </div></td>
                                 <!-- Modal -->
-                                <td><form  action="deleteUser" method="get">
-                                    <input hidden="hidden" th:name="id" th:value="${userses.getId()}"/>
-                                    <input role="button" class="btn btn-danger" type="submit" value="Delete"/>
-                                </form></td>
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <form  action="#modalForDelete" method="get">
+                                        <input hidden="hidden" th:name="id" th:value="${userses.getId()}"/>
+                                        <input hidden="hidden" th:name="name" th:value="${userses.getName()}"/>
+                                        <input hidden="hidden" th:name="lastname" th:value="${userses.getLastname()}"/>
+                                        <input hidden="hidden" th:name="age" th:value="${userses.getAge()}"/>
+                                        <input hidden="hidden" th:name="email" th:value="${userses.getEmail()}"/>
+                                        <input hidden="hidden" th:name="password" th:value="${userses.getPassword()}"/>
+                                        <input role="button" class="btn btn-danger" type="submit" value="Delete" data-bs-toggle="modal" data-bs-target="#modalForDelete"/>
+                                    </form>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="modalForDelete" tabindex="-1" aria-labelledby="userTable" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="deleteUser" method="get">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="userTable">Delete user</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+
+                                                        <div class="mb-3">
+                                                            <label for="userId" class="form-label">ID</label>
+                                                            <div class="input-group grey">
+                                                                <input readonly type="number" th:name="id" th:value="${user.getId()}"
+                                                                       class="form-control" id="userId" aria-describedby="basic-addon3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="userName" class="form-label">First Name</label>
+                                                            <div class="input-group">
+                                                                <input disabled type="text" th:name="name" th:value="${user.getName()}"
+                                                                       class="form-control" id="userName" aria-describedby="basic-addon3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="userLastname" class="form-label">Last Name</label>
+                                                            <div class="input-group">
+                                                                <input disabled type="text" th:name="lastname" th:value="${user.getLastname()}"
+                                                                       class="form-control" id="userLastname" aria-describedby="basic-addon3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="userAge" class="form-label">Age</label>
+                                                            <div class="input-group">
+                                                                <input disabled type="number" th:name="age" th:value="${user.getAge()}"
+                                                                       class="form-control" id="userAge" aria-describedby="basic-addon3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="userEmail" class="form-label">Email</label>
+                                                            <div class="input-group">
+                                                                <input disabled type="email" th:name="email" th:value="${user.getEmail()}"
+                                                                       class="form-control" id="userEmail" aria-describedby="basic-addon3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="userPassword" class="form-label">Password</label>
+                                                            <div class="input-group">
+                                                                <input disabled type="password" th:name="password" th:value="${user.getPassword()}"
+                                                                       class="form-control" id="userPassword" aria-describedby="basic-addon3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="userRole" class="form-label">Role</label>
+                                                            <select disabled class="form-select" multiple aria-label="multiple select example" id="userRole" th:name="roles">
+                                                                <option name="isUser" th:value="ROLE_USER">USER</option>
+                                                                <option name="isAdmin" th:value="ROLE_ADMIN">ADMIN</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <input type="submit" class="btn btn-danger" value="Delete">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!-- Modal -->
                             </tr>
                             </tbody>
                         </table>
