@@ -23,4 +23,9 @@ public class UserController {
         model.addAttribute("user", user);
         return "userPage";
     }
+
+    @RequestMapping(value = "/admin")
+    public String scripts(ModelMap model) {
+        return "adminPage";
+    }
 }

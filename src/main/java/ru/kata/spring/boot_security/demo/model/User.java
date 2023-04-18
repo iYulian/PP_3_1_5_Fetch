@@ -5,6 +5,7 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.restModel.RestUserModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -53,6 +54,24 @@ public class User implements UserDetails, Serializable {
         this.password = password;
     }
 
+    public User (RestUserModel userModel) {
+        this.id = userModel.getId();
+        this.name = userModel.getName();
+        this.lastname = userModel.getLastname();
+        this.age = userModel.getAge();
+        this.email = userModel.getEmail();
+        this.password = userModel.getPassword();
+        this.authority = new HashSet<>();
+        if (userModel.getAuthority() != null) {
+            if (userModel.getAuthority().contains("USER")) {
+                authority.add(new Role("ROLE_USER"));
+            }
+            if (userModel.getAuthority().contains("ADMIN")) {
+                authority.add(new Role("ROLE_ADMIN"));
+            }
+        }
+    }
+
     public void userAddAuthority(String stringRole) {
         Role role = new Role(stringRole);
         authority.add(role);
@@ -62,7 +81,7 @@ public class User implements UserDetails, Serializable {
     }
 
     public String getRolesToString() {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
         authority.forEach(stringBuffer::append);
         return stringBuffer.toString();
     }
