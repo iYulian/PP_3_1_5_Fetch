@@ -27,20 +27,25 @@ public class UserDaoHibernateIml implements UserDaoHibernate {
         Role userRole = getRoleByName("ROLE_USER");
         Set<Role> roleSet = new HashSet<>();
 
-        if (user.getRoles().contains(adminRole) & user.getRoles().contains(userRole)) {
-            roleSet.add(adminRole);
-            roleSet.add(userRole);
-            user.setRoles(roleSet);
+        if (user.getId() != 0 && user.getRoles().isEmpty()) {
+            user.setRoles(getUserById(user.getId()).getRoles());
         } else {
-            if (user.getRoles().contains(adminRole)) {
+            if (user.getRoles().contains(adminRole) & user.getRoles().contains(userRole)) {
                 roleSet.add(adminRole);
-                user.setRoles(roleSet);
-            }
-            if (user.getRoles().contains(userRole)) {
                 roleSet.add(userRole);
                 user.setRoles(roleSet);
+            } else {
+                if (user.getRoles().contains(adminRole)) {
+                    roleSet.add(adminRole);
+                    user.setRoles(roleSet);
+                }
+                if (user.getRoles().contains(userRole)) {
+                    roleSet.add(userRole);
+                    user.setRoles(roleSet);
+                }
             }
         }
+
         if (user.getPassword().isEmpty()) {
             user.setPassword(getUserById(user.getId()).getPassword());
         } else {
