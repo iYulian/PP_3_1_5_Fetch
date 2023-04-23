@@ -1,13 +1,6 @@
 package ru.kata.spring.boot_security.demo.restModel;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RestUserModel {
     private long id;

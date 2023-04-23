@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.hibernate.annotations.Fetch;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.restModel.RestUserModel;
@@ -34,9 +33,6 @@ public class RestController {
 
     @PostMapping("/users")
     public RestUserModel addUser(@RequestBody RestUserModel userModel) {
-        System.out.println("123");
-        User user = new User(userModel);
-        System.out.println(user);
         userService.saveUser(new User(userModel));
         return userModel;
     }
