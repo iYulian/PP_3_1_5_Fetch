@@ -10,10 +10,10 @@ import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rest/")
-public class RestController {
+public class RestUserController {
 
     private final UserService userService;
-    public RestController(UserService userService) {
+    public RestUserController(UserService userService) {
         this.userService = userService;
     }
 
